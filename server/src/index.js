@@ -21,6 +21,14 @@ const roomCalls = {
   // }
 }
 
+function broadcastRoomCallState(roomId, state) {
+  wsServer.emit('room-call', { roomId, state })
+}
+
+function broadcastRoomCallPeerState(roomId, peerId, state) {
+  wsServer.emit('room-call-peer', { roomId, peerId, state })
+}
+
 async function setupRoom(roomId) {
   const room = roomCalls[roomId] = {
     router: null,
@@ -28,7 +36,7 @@ async function setupRoom(roomId) {
   }
 
   room.router = await mediasoup.createRouter()
-  wsServer.emit('room-call', { roomId, state: 'new' })
+  broadcastRoomCallState(roomId, 'new')
 
   return room
 }
@@ -43,7 +51,7 @@ function closeRoom(roomId) {
     })
 
     delete roomCalls[roomId]
-    wsServer.emit('room-call', { roomId, state: 'closed' })
+    broadcastRoomCallState(roomId, 'closed')
 
     // TODO: broadcast room closed
   }
@@ -57,7 +65,7 @@ function setupPeer(roomId, peerId) {
     producers: {},
     consumers: {},
   }
-  wsServer.emit('room-call-peer', { roomId, peerId, state: 'new' })
+  broadcastRoomCallPeerState(roomId, peerId, 'new')
 }
 
 function closePeer(roomId, peerId) {
@@ -87,7 +95,7 @@ function closePeer(roomId, peerId) {
     }
 
     delete room.peers[peerId]
-    wsServer.emit('room-call-peer', { roomId, peerId, state: 'closed' })
+    broadcastRoomCallPeerState(roomId, peerId, 'closed')
 
     // TODO: broadcast peer closed
 
