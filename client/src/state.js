@@ -1,19 +1,3 @@
-import * as mediasoup from './mediasoup'
-
-const mediasoupClients = {
-  // [roomId]: {
-  //   device,
-  //   sendTransport,
-  //   recvTransport,
-  //   producers: {
-  //     [kind]: producer,
-  //   }
-  //   consumers: {
-  //     [id]: consumer,
-  //   }
-  // }
-}
-
 import { setGlobal, addReducer, getDispatch } from 'reactn'
 import immer, { setAutoFreeze } from 'immer'
 setAutoFreeze(false)
@@ -21,6 +5,7 @@ import ws, { request } from './ws'
 import lodash from 'lodash'
 import addReactNDevTools from 'reactn-devtools'
 addReactNDevTools()
+import MediasoupClient from './mediasoup'
 
 setGlobal({
   roomCalls: {}
@@ -80,5 +65,18 @@ ws.on('room-call-peer', async ({ roomId, peerId, state }) => {
       break
     }
   }
+})
+
+export const mediasoupClients = {}
+
+addReducer('joinRoomCall', async (global, dispatch, roomId) => {
+  await request('joinRoomCall', { roomId })
+  mediasoupClients[roomId] = await MediasoupClient.create(roomId)
+})
+
+addReducer('leaveRoomCall', async (global, dispatch, roomId) => {
+  mediasoupClients[roomId].close()
+  delete mediasoupClients[roomId]
+  await request('leaveRoomCall', { roomId })
 })
 

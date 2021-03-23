@@ -70,7 +70,7 @@ function setupPeer(roomId, peerId) {
 
 function closePeer(roomId, peerId) {
   const room = roomCalls[roomId]
-  if (room.peers[peerId]) {
+  if (room && room.peers[peerId]) {
     const {
       producers,
       consumers,
@@ -126,7 +126,7 @@ wsServer.on('connection', ws => {
     cb(null, res)
   })
 
-  ws.on('joinRoomCall', async ({ roomId }) => {
+  ws.on('joinRoomCall', async ({ roomId }, cb) => {
     if (!roomCalls[roomId]) {
       await setupRoom(roomId)
     }
@@ -136,153 +136,157 @@ wsServer.on('connection', ws => {
     ws.on('disconnect', () => {
       closePeer(roomId, ws.id)
     })
+
+    cb(null)
   })
 
-  ws.on('leaveRoomCall', ({ roomId }) => {
+  ws.on('leaveRoomCall', ({ roomId }, cb) => {
     closePeer(roomId, ws.id)
+    cb(null)
   })
 
-  // ws.on('getRouterRtpCapabilities', (cb) => {
-  //   cb(null, router.rtpCapabilities)
-  // })
+  ws.on('getRouterRtpCapabilities', ({ roomId }, cb) => {
+    const room = roomCalls[roomId]
+    cb(null, room.router.rtpCapabilities)
+  })
 
-  // ws.on('createProducerTransport', async (cb) => {
-  //   try {
-  //     const transport = await mediasoup.createWebRtcTransport(router)
-  //     setPeerProducerTransport(ws.id, transport)
-  //     cb(null, {
-  //       id: transport.id,
-  //       iceParameters: transport.iceParameters,
-  //       iceCandidates: transport.iceCandidates,
-  //       dtlsParameters: transport.dtlsParameters
-  //     })
-  //   } catch (err) {
-  //     console.error(err)
-  //     cb(err)
-  //   }
-  // })
+  ws.on('createProducerTransport', async ({ roomId }, cb) => {
+    try {
+      const room = roomCalls[roomId]
+      const transport = await mediasoup.createWebRtcTransport(room.router)
+      room.peers[ws.id].producerTransport = transport
+      cb(null, {
+        id: transport.id,
+        iceParameters: transport.iceParameters,
+        iceCandidates: transport.iceCandidates,
+        dtlsParameters: transport.dtlsParameters
+      })
+    } catch (err) {
+      console.error(err)
+      cb(err)
+    }
+  })
 
-  // ws.on('createConsumerTransport', async (cb) => {
-  //   try {
-  //     const transport = await mediasoup.createWebRtcTransport(router)
-  //     setPeerConsumerTransport(ws.id, transport)
-  //     cb(null, {
-  //       id: transport.id,
-  //       iceParameters: transport.iceParameters,
-  //       iceCandidates: transport.iceCandidates,
-  //       dtlsParameters: transport.dtlsParameters
-  //     })
-  //   } catch (err) {
-  //     console.error(err)
-  //     cb(err)
-  //   }
-  // })
+  ws.on('createConsumerTransport', async ({ roomId }, cb) => {
+    try {
+      const room = roomCalls[roomId]
+      const transport = await mediasoup.createWebRtcTransport(room.router)
+      room.peers[ws.id].consumerTransport = transport
+      cb(null, {
+        id: transport.id,
+        iceParameters: transport.iceParameters,
+        iceCandidates: transport.iceCandidates,
+        dtlsParameters: transport.dtlsParameters
+      })
+    } catch (err) {
+      console.error(err)
+      cb(err)
+    }
+  })
 
-  // ws.on('connectProducerTransport', async ({ dtlsParameters }, cb) => {
-  //   try {
-  //     const transport = getPeerProducerTransport(ws.id)
-  //     await transport.connect({ dtlsParameters })
-  //     cb(null)
-  //   } catch(err) {
-  //     console.error(err)
-  //     cb(err)
-  //   }
-  // })
+  ws.on('connectProducerTransport', async ({ roomId, dtlsParameters }, cb) => {
+    try {
+      const room = roomCalls[roomId]
+      const transport = room.peers[ws.id].producerTransport
+      await transport.connect({ dtlsParameters })
+      cb(null)
+    } catch(err) {
+      console.error(err)
+      cb(err)
+    }
+  })
 
-  // ws.on('connectConsumerTransport', async ({ dtlsParameters }, cb) => {
-  //   try {
-  //     const transport = getPeerConsumerTransport(ws.id)
-  //     await transport.connect({ dtlsParameters })
-  //     cb(null)
+  ws.on('connectConsumerTransport', async ({ roomId, dtlsParameters }, cb) => {
+    try {
+      const room = roomCalls[roomId]
+      const transport = room.peers[ws.id].consumerTransport
+      await transport.connect({ dtlsParameters })
+      cb(null)
 
-  //   } catch(err) {
-  //     console.error(err)
-  //     cb(err)
-  //   }
-  // })
+    } catch(err) {
+      console.error(err)
+      cb(err)
+    }
+  })
 
-  // ws.on('createProducer', async ({ kind, rtpParameters }, cb) => {
-  //   try {
-  //     const transport = getPeerProducerTransport(ws.id)
-  //     const producer = await transport.produce({ kind, rtpParameters })
-  //     cb(null, { id: producer.id })
+  ws.on('createProducer', async ({ roomId, kind, rtpParameters }, cb) => {
+    try {
+      const room = roomCalls[roomId]
+      const transport = room.peers[ws.id].producerTransport
+      const producer = await transport.produce({ kind, rtpParameters })
+      room.peers[ws.id].producers[kind] = producer
+      cb(null, { id: producer.id })
 
-  //     ws.emit('producer', {
-  //       peerId: ws.id,
-  //       id: producer.id,
-  //       state: 'new',
-  //       kind,
-  //     })
+      ws.emit('room-call-peer-producer', {
+        roomId,
+        peerId: ws.id,
+        id: producer.id,
+        state: 'new',
+        kind,
+      })
 
-  //     producer.observer.on('close', () => {
-  //       ws.emit('producer', {
-  //         peerId: ws.id,
-  //         id: producer.id,
-  //         state: 'close',
-  //         kind,
-  //       })
-  //     })
+      producer.observer.on('close', () => {
+        ws.emit('room-call-peer-producer', {
+          roomId,
+          peerId: ws.id,
+          id: producer.id,
+          state: 'close',
+          kind,
+        })
+      })
 
-  //     producer.observer.on('pause', () => {
-  //       ws.emit('producer', {
-  //         peerId: ws.id,
-  //         id: producer.id,
-  //         state: 'pause',
-  //         kind,
-  //       })
-  //     })
+      producer.observer.on('pause', () => {
+        ws.emit('room-call-peer-producer', {
+          roomId,
+          peerId: ws.id,
+          id: producer.id,
+          state: 'pause',
+          kind,
+        })
+      })
 
-  //     producer.observer.on('resume', () => {
-  //       ws.emit('producer', {
-  //         peerId: ws.id,
-  //         id: producer.id,
-  //         state: 'resume',
-  //         kind,
-  //       })
-  //     })
+      producer.observer.on('resume', () => {
+        ws.emit('room-call-peer-producer', {
+          roomId,
+          peerId: ws.id,
+          id: producer.id,
+          state: 'resume',
+          kind,
+        })
+      })
 
-  //   } catch(err) {
-  //     console.error(err)
-  //     cb(err)
-  //   }
-  // })
+    } catch(err) {
+      console.error(err)
+      cb(err)
+    }
+  })
 
-  // ws.on('createConsumer', async ({ peerId, kind, rtpCapabilities }, cb) => {
-  //   try {
-  //     const transport = getPeerConsumerTransport(ws.id)
-  //     const producer = getPeerProducer(peerId, kind)
+  ws.on('createConsumer', async ({ peerId, kind, rtpCapabilities }, cb) => {
+    try {
+      const room = roomCalls[roomId]
+      const transport = room.peers[ws.id].consumerTransport
+      const producer = room.peers[peerId].producers[kind]
 
-  //     const consumer = await createConsumer(
-  //       router, transport, producer, rtpCapabilities
-  //     )
+      const consumer = await createConsumer(
+        room.router, transport, producer, rtpCapabilities
+      )
 
-  //     setPeerConsumer(ws.id, consumer)
+      setPeerConsumer(ws.id, consumer)
 
-  //     cb(null, {
-  //       producerId,
-  //       id: consumer.id,
-  //       kind: consumer.kind,
-  //       rtpParameters: consumer.rtpParameters,
-  //       type: consumer.type,
-  //       producerPaused: consumer.producerPaused
-  //     })
+      cb(null, {
+        producerId,
+        id: consumer.id,
+        kind: consumer.kind,
+        rtpParameters: consumer.rtpParameters,
+        type: consumer.type,
+        producerPaused: consumer.producerPaused
+      })
 
-  //   } catch(err) {
-  //     console.error(err)
-  //     cb(err)
-  //   }
-  // })
-
-  // ws.on('resumeConsumer', async ({ consumerId }, cb) => {
-  //   try {
-  //     const consumer = consumers[consumerId]
-  //     await consumer.resume()
-  //     cb(null)
-  //   } catch(err) {
-  //     console.error(err)
-  //     cb(err)
-  //   }
-  // })
+    } catch(err) {
+      console.error(err)
+      cb(err)
+    }
+  })
 })
 
 async function start() {
