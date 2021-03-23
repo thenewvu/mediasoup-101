@@ -1066,11 +1066,11 @@
           var dispatcher = resolveDispatcher();
           return dispatcher.useReducer(reducer, initialArg, init);
         }
-        function useRef2(initialValue) {
+        function useRef3(initialValue) {
           var dispatcher = resolveDispatcher();
           return dispatcher.useRef(initialValue);
         }
-        function useEffect4(create, deps) {
+        function useEffect5(create, deps) {
           var dispatcher = resolveDispatcher();
           return dispatcher.useEffect(create, deps);
         }
@@ -1640,12 +1640,12 @@
         exports.useCallback = useCallback;
         exports.useContext = useContext2;
         exports.useDebugValue = useDebugValue;
-        exports.useEffect = useEffect4;
+        exports.useEffect = useEffect5;
         exports.useImperativeHandle = useImperativeHandle;
         exports.useLayoutEffect = useLayoutEffect;
         exports.useMemo = useMemo;
         exports.useReducer = useReducer;
-        exports.useRef = useRef2;
+        exports.useRef = useRef3;
         exports.useState = useState3;
         exports.version = ReactVersion;
       })();
@@ -2633,11 +2633,11 @@
     if (true) {
       (function() {
         "use strict";
-        var React7 = require_react();
+        var React8 = require_react();
         var _assign = require_object_assign();
         var Scheduler = require_scheduler();
         var tracing = require_tracing();
-        var ReactSharedInternals = React7.__SECRET_INTERNALS_DO_NOT_USE_OR_YOU_WILL_BE_FIRED;
+        var ReactSharedInternals = React8.__SECRET_INTERNALS_DO_NOT_USE_OR_YOU_WILL_BE_FIRED;
         function warn(format) {
           {
             for (var _len = arguments.length, args = new Array(_len > 1 ? _len - 1 : 0), _key = 1; _key < _len; _key++) {
@@ -2669,7 +2669,7 @@
             Function.prototype.apply.call(console[level], console, argsWithFormat);
           }
         }
-        if (!React7) {
+        if (!React8) {
           {
             throw Error("ReactDOM was loaded before React. Make sure you load the React package before loading ReactDOM.");
           }
@@ -3885,7 +3885,7 @@
         var didWarnInvalidChild = false;
         function flattenChildren(children) {
           var content = "";
-          React7.Children.forEach(children, function(child) {
+          React8.Children.forEach(children, function(child) {
             if (child == null) {
               return;
             }
@@ -3896,7 +3896,7 @@
         function validateProps(element, props) {
           {
             if (typeof props.children === "object" && props.children !== null) {
-              React7.Children.forEach(props.children, function(child) {
+              React8.Children.forEach(props.children, function(child) {
                 if (child == null) {
                   return;
                 }
@@ -11102,7 +11102,7 @@
         }
         var fakeInternalInstance = {};
         var isArray = Array.isArray;
-        var emptyRefsObject = new React7.Component().refs;
+        var emptyRefsObject = new React8.Component().refs;
         var didWarnAboutStateAssignmentForComponent;
         var didWarnAboutUninitializedState;
         var didWarnAboutGetSnapshotBeforeUpdateWithoutDidUpdate;
@@ -22188,10 +22188,10 @@ For more info, visit https://reactjs.org/link/mock-scheduler`);
     };
     Object.defineProperty(exports, "__esModule", {value: true});
     var methods_1 = require_methods();
-    var React7 = require_react();
+    var React8 = require_react();
     exports.componentWillUpdatePrototype = function(that) {
       var proto = Object.getPrototypeOf(that);
-      var _a = __read(React7.version.split(".").map(function(v2) {
+      var _a = __read(React8.version.split(".").map(function(v2) {
         return parseInt(v2);
       }), 2), rVerMaj = _a[0], rVerMin = _a[1];
       if (Object.prototype.hasOwnProperty.call(proto, "componentWillUpdate") && (rVerMaj < 16 || rVerMaj === 16 && rVerMin < 3)) {
@@ -22240,10 +22240,10 @@ For more info, visit https://reactjs.org/link/mock-scheduler`);
     };
     Object.defineProperty(exports, "__esModule", {value: true});
     var methods_1 = require_methods();
-    var React7 = require_react();
+    var React8 = require_react();
     exports.shouldComponentUpdatePrototype = function(that) {
       var proto = Object.getPrototypeOf(that);
-      var _a = __read(React7.version.split(".").map(function(v2) {
+      var _a = __read(React8.version.split(".").map(function(v2) {
         return parseInt(v2);
       }), 2), rVerMaj = _a[0], rVerMin = _a[1];
       if (Object.prototype.hasOwnProperty.call(proto, "shouldComponentUpdate") && (rVerMaj > 16 || rVerMaj === 16 && rVerMin >= 3)) {
@@ -22286,7 +22286,7 @@ For more info, visit https://reactjs.org/link/mock-scheduler`);
       return ar;
     };
     Object.defineProperty(exports, "__esModule", {value: true});
-    var React7 = require_react();
+    var React8 = require_react();
     var methods_1 = require_methods();
     var component_will_unmount_1 = require_component_will_unmount();
     var component_will_update_1 = require_component_will_update();
@@ -22297,10 +22297,10 @@ For more info, visit https://reactjs.org/link/mock-scheduler`);
           methods_1.ReactNComponentWillUnmount(that);
         };
       }
-      var _a = __read(React7.version.split(".").map(function(v2) {
+      var _a = __read(React8.version.split(".").map(function(v2) {
         return parseInt(v2);
       }), 2), rVerMaj = _a[0], rVerMin = _a[1];
-      var isPureComponent = React7.PureComponent && that instanceof React7.PureComponent;
+      var isPureComponent = React8.PureComponent && that instanceof React8.PureComponent;
       var isUsingOldReact = rVerMaj < 16 || rVerMaj === 16 && rVerMin < 3;
       if (isUsingOldReact && !component_will_update_1.componentWillUpdatePrototype(that)) {
         that.componentWillUpdate = function() {
@@ -22345,13 +22345,13 @@ For more info, visit https://reactjs.org/link/mock-scheduler`);
       };
     }();
     Object.defineProperty(exports, "__esModule", {value: true});
-    var React7 = require_react();
+    var React8 = require_react();
     var methods_1 = require_methods();
     var bind_lifecycle_methods_1 = require_bind_lifecycle_methods();
     var isComponentDidMount = false;
     var isComponentDidUpdate = false;
     var isSetGlobalCallback = false;
-    var ReactPureComponent = React7.PureComponent || React7.Component;
+    var ReactPureComponent = React8.PureComponent || React8.Component;
     var ReactNComponent = function(_super) {
       __extends(ReactNComponent2, _super);
       function ReactNComponent2(props, context2) {
@@ -22384,7 +22384,7 @@ For more info, visit https://reactjs.org/link/mock-scheduler`);
         return methods_1.ReactNGlobalCallback(this);
       };
       return ReactNComponent2;
-    }(React7.Component);
+    }(React8.Component);
     exports.ReactNComponent = ReactNComponent;
     var ReactNPureComponent = function(_super) {
       __extends(ReactNPureComponent2, _super);
@@ -22768,7 +22768,7 @@ For more info, visit https://reactjs.org/link/mock-scheduler`);
       return __assign.apply(this, arguments);
     };
     Object.defineProperty(exports, "__esModule", {value: true});
-    var React7 = require_react();
+    var React8 = require_react();
     var components_1 = require_components();
     var context_1 = require_context();
     var global_state_manager_1 = require_global_state_manager();
@@ -22837,7 +22837,7 @@ For more info, visit https://reactjs.org/link/mock-scheduler`);
           });
           ReactNWithGlobalHoc.prototype.render = function() {
             var lowerOrderProps = __assign(__assign(__assign({}, this.props), getter(this.global, this.dispatch, this.props)), setter(this.setGlobal, this.dispatch, this.props));
-            return React7.createElement(Component2, __assign({}, lowerOrderProps));
+            return React8.createElement(Component2, __assign({}, lowerOrderProps));
           };
           return ReactNWithGlobalHoc;
         }(components_1.ReactNComponent), _a.contextType = context_1.default, _a.displayName = componentName(Component2) + "-ReactN", _a;
@@ -22869,7 +22869,7 @@ For more info, visit https://reactjs.org/link/mock-scheduler`);
       };
     }();
     Object.defineProperty(exports, "__esModule", {value: true});
-    var React7 = require_react();
+    var React8 = require_react();
     var context_1 = require_context();
     var add_reducer_1 = require_add_reducer();
     var add_reducers_1 = require_add_reducers();
@@ -22970,10 +22970,10 @@ For more info, visit https://reactjs.org/link/mock-scheduler`);
           return with_global_1.default(globalStateManager, getter, setter);
         };
         ReactNProvider.prototype.render = function() {
-          return React7.createElement(context_1.default.Provider, {value: globalStateManager}, this.props.children);
+          return React8.createElement(context_1.default.Provider, {value: globalStateManager}, this.props.children);
         };
         return ReactNProvider;
-      }(React7.Component);
+      }(React8.Component);
     }
     exports.default = _createProvider;
   });
@@ -23185,7 +23185,7 @@ For more info, visit https://reactjs.org/link/mock-scheduler`);
       return __assign.apply(this, arguments);
     };
     Object.defineProperty(exports, "__esModule", {value: true});
-    var React7 = require_react();
+    var React8 = require_react();
     var add_reducers_1 = require_add_reducers();
     var components_1 = require_components();
     var default_global_state_manager_1 = require_default_global_state_manager();
@@ -23225,11 +23225,11 @@ For more info, visit https://reactjs.org/link/mock-scheduler`);
           ReactNWithInitHoc.prototype.render = function() {
             if (!this.state.global || !this.state.reducers) {
               if (FallbackComponent) {
-                return React7.createElement(FallbackComponent, __assign({}, this.props));
+                return React8.createElement(FallbackComponent, __assign({}, this.props));
               }
               return null;
             }
-            return React7.createElement(Component2, __assign({}, this.props));
+            return React8.createElement(Component2, __assign({}, this.props));
           };
           return ReactNWithInitHoc;
         }(components_1.ReactNComponent);
@@ -23257,8 +23257,8 @@ For more info, visit https://reactjs.org/link/mock-scheduler`);
     var use_global_1 = require_use_global();
     var with_global_1 = require_with_global();
     var with_init_1 = require_with_init();
-    var React7 = require_react();
-    module.exports = Object.assign(decorator_1.default, React7, {
+    var React8 = require_react();
+    module.exports = Object.assign(decorator_1.default, React8, {
       addCallback: add_callback_1.default.bind(null, default_global_state_manager_1.default),
       addReducer: add_reducer_1.default.bind(null, default_global_state_manager_1.default),
       addReducers: add_reducers_1.default.bind(null, default_global_state_manager_1.default),
@@ -43246,7 +43246,7 @@ For more info, visit https://reactjs.org/link/mock-scheduler`);
   });
 
   // src/index.jsx
-  var import_react8 = __toModule(require_react());
+  var import_react9 = __toModule(require_react());
   var import_react_dom = __toModule(require_react_dom());
 
   // node_modules/@babel/runtime/helpers/esm/setPrototypeOf.js
@@ -45029,7 +45029,7 @@ For more info, visit https://reactjs.org/link/mock-scheduler`);
   var rooms_default = Rooms;
 
   // src/room-call.jsx
-  var import_react7 = __toModule(require_react());
+  var import_react8 = __toModule(require_react());
   var import_reactn3 = __toModule(require_build());
 
   // node_modules/react-use/esm/useEffectOnce.js
@@ -45578,6 +45578,18 @@ For more info, visit https://reactjs.org/link/mock-scheduler`);
       this.producers.video = producer;
       return producer;
     }
+    async createDisplayProducer() {
+      if (!this.device.sendTransport) {
+        await this.createSendTransport();
+      }
+      const stream = await navigator.mediaDevices.getDisplayMedia({
+        frameRate: {ideal: 10}
+      });
+      const track = stream.getVideoTracks()[0];
+      const producer = await this.sendTransport.produce({track});
+      this.producers.video = producer;
+      return producer;
+    }
     async createAudioProducer() {
       if (!this.device.sendTransport) {
         await this.createSendTransport();
@@ -45587,6 +45599,14 @@ For more info, visit https://reactjs.org/link/mock-scheduler`);
       const producer = await this.sendTransport.produce({track});
       this.producers.audio = producer;
       return producer;
+    }
+    async closeVideoProducer() {
+      this.producers.video.close();
+      await request("closeProducer", {roomId: this.roomId, kind: "video"});
+    }
+    async closeAudioProducer() {
+      this.producers.audio.close();
+      await request("closeProducer", {roomId: this.roomId, kind: "audio"});
     }
   };
   var mediasoup_default = MediasoupClient;
@@ -45654,14 +45674,31 @@ For more info, visit https://reactjs.org/link/mock-scheduler`);
     await request("leaveRoomCall", {roomId});
   });
 
+  // src/video.jsx
+  var import_react7 = __toModule(require_react());
+  function Video({src, ...props}) {
+    const ref = (0, import_react7.useRef)(null);
+    (0, import_react7.useEffect)(() => {
+      if (!ref.current)
+        return;
+      ref.current.srcObject = src;
+    }, [src]);
+    return /* @__PURE__ */ import_react7.default.createElement("video", {
+      ref,
+      ...props
+    });
+  }
+
   // src/room-call.jsx
   function RoomCall() {
     const {roomId} = useParams();
     const dispatch = (0, import_reactn3.useDispatch)();
-    const [enabledMic, setEnabledMic] = (0, import_react7.useState)(false);
-    const [enabledCam, setEnabledCam] = (0, import_react7.useState)(false);
-    const [ready, setReady] = (0, import_react7.useState)(false);
-    (0, import_react7.useEffect)(async () => {
+    const [enabledMic, setEnabledMic] = (0, import_react8.useState)(false);
+    const [enabledCam, setEnabledCam] = (0, import_react8.useState)(false);
+    const [enabledScreen, setEnabledScreen] = (0, import_react8.useState)(false);
+    const [ready, setReady] = (0, import_react8.useState)(false);
+    const client = mediasoupClients[roomId];
+    (0, import_react8.useEffect)(async () => {
       await dispatch.joinRoomCall(roomId);
       setReady(true);
     }, []);
@@ -45670,55 +45707,76 @@ For more info, visit https://reactjs.org/link/mock-scheduler`);
     });
     toggleMic = async () => {
       if (!enabledMic) {
-        await mediasoupClients[roomId].createAudioProducer();
+        await client.createAudioProducer();
       }
       setEnabledMic(!enabledMic);
     };
     toggleCam = async () => {
       if (!enabledCam) {
-        await mediasoupClients[roomId].createVideoProducer();
+        await client.createVideoProducer();
       }
       setEnabledCam(!enabledCam);
+    };
+    toggleScreen = async () => {
+      if (!enabledScreen) {
+        await client.createDisplayProducer();
+      }
+      setEnabledScreen(!enabledScreen);
     };
     if (!ready) {
       return null;
     }
-    return /* @__PURE__ */ import_react7.default.createElement(import_react7.default.Fragment, null, /* @__PURE__ */ import_react7.default.createElement("div", null, roomId), /* @__PURE__ */ import_react7.default.createElement("input", {
+    let localVideoStream = null;
+    if (client.producers.video) {
+      localVideoStream = new MediaStream();
+      localVideoStream.addTrack(client.producers.video.track);
+    }
+    return /* @__PURE__ */ import_react8.default.createElement(import_react8.default.Fragment, null, /* @__PURE__ */ import_react8.default.createElement("div", null, roomId), /* @__PURE__ */ import_react8.default.createElement("input", {
       type: "checkbox",
       name: "mic",
       checked: enabledMic,
       onChange: toggleMic
-    }), /* @__PURE__ */ import_react7.default.createElement("label", {
+    }), /* @__PURE__ */ import_react8.default.createElement("label", {
       htmlFor: "mic"
-    }, "Mic"), /* @__PURE__ */ import_react7.default.createElement("input", {
+    }, "Mic"), /* @__PURE__ */ import_react8.default.createElement("input", {
       type: "checkbox",
       name: "cam",
       checked: enabledCam,
       onChange: toggleCam
-    }), /* @__PURE__ */ import_react7.default.createElement("label", {
+    }), /* @__PURE__ */ import_react8.default.createElement("label", {
       htmlFor: "cam"
-    }, "Cam"));
+    }, "Cam"), /* @__PURE__ */ import_react8.default.createElement("input", {
+      type: "checkbox",
+      name: "screen",
+      checked: enabledScreen,
+      onChange: toggleScreen
+    }), /* @__PURE__ */ import_react8.default.createElement("label", {
+      htmlFor: "screen"
+    }, "Screen"), localVideoStream && /* @__PURE__ */ import_react8.default.createElement(Video, {
+      src: localVideoStream,
+      autoPlay: true
+    }));
   }
   var room_call_default = RoomCall;
 
   // src/index.jsx
   window.localStorage.setItem("debug", "*");
   function App() {
-    return /* @__PURE__ */ import_react8.default.createElement(HashRouter, null, /* @__PURE__ */ import_react8.default.createElement(Switch, null, /* @__PURE__ */ import_react8.default.createElement(Route, {
+    return /* @__PURE__ */ import_react9.default.createElement(HashRouter, null, /* @__PURE__ */ import_react9.default.createElement(Switch, null, /* @__PURE__ */ import_react9.default.createElement(Route, {
       exact: true,
       path: "/"
-    }, /* @__PURE__ */ import_react8.default.createElement(Redirect, {
+    }, /* @__PURE__ */ import_react9.default.createElement(Redirect, {
       to: "/rooms"
-    })), /* @__PURE__ */ import_react8.default.createElement(Route, {
+    })), /* @__PURE__ */ import_react9.default.createElement(Route, {
       exact: true,
       path: "/rooms",
       component: rooms_default
-    }), /* @__PURE__ */ import_react8.default.createElement(Route, {
+    }), /* @__PURE__ */ import_react9.default.createElement(Route, {
       exact: true,
       path: "/rooms/:roomId",
       component: room_call_default
     })));
   }
-  import_react_dom.default.render(/* @__PURE__ */ import_react8.default.createElement(App, null), document.getElementById("react-root"));
+  import_react_dom.default.render(/* @__PURE__ */ import_react9.default.createElement(App, null), document.getElementById("react-root"));
 })();
 //# sourceMappingURL=index.js.map

@@ -137,7 +137,7 @@ export default class MediasoupClient {
     return consumer
   }
 
-  async createVideoProducer() {
+  async createVideoProducer(track) {
     if (!this.device.sendTransport) {
       await this.createSendTransport()
     }
@@ -155,6 +155,20 @@ export default class MediasoupClient {
     return producer
   }
 
+  async createDisplayProducer() {
+    if (!this.device.sendTransport) {
+      await this.createSendTransport()
+    }
+
+    const stream = await navigator.mediaDevices.getDisplayMedia({
+      frameRate: { ideal: 10 },
+    })
+    const track = stream.getVideoTracks()[0]
+    const producer = await this.sendTransport.produce({ track })
+    this.producers.video = producer
+    return producer
+  }
+
   async createAudioProducer() {
     if (!this.device.sendTransport) {
       await this.createSendTransport()
@@ -165,6 +179,16 @@ export default class MediasoupClient {
     const producer = await this.sendTransport.produce({ track })
     this.producers.audio = producer
     return producer
+  }
+
+  async closeVideoProducer() {
+    this.producers.video.close()
+    await request('closeProducer', { roomId: this.roomId, kind: 'video' })
+  }
+
+  async closeAudioProducer() {
+    this.producers.audio.close()
+    await request('closeProducer', { roomId: this.roomId, kind: 'audio' })
   }
 }
 

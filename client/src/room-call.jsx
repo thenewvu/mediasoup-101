@@ -5,13 +5,16 @@ import { useUnmount } from 'react-use'
 import { Button } from 'react-bootstrap'
 import { request } from './ws'
 import { mediasoupClients } from './state'
+import Video from './video'
 
 function RoomCall() {
   const { roomId } = useParams()
   const dispatch = useDispatch()
   const [enabledMic, setEnabledMic] = useState(false)
   const [enabledCam, setEnabledCam] = useState(false)
+  const [enabledScreen, setEnabledScreen] = useState(false)
   const [ready, setReady] = useState(false)
+  const client = mediasoupClients[roomId] 
 
   useEffect(async () => {
     await dispatch.joinRoomCall(roomId)
@@ -24,20 +27,33 @@ function RoomCall() {
 
   toggleMic = async () => {
     if (!enabledMic) {
-      await mediasoupClients[roomId].createAudioProducer()
+      await client.createAudioProducer()
     }
     setEnabledMic(!enabledMic)
   }
 
   toggleCam = async () => {
     if (!enabledCam) {
-      await mediasoupClients[roomId].createVideoProducer()
+      await client.createVideoProducer()
     }
     setEnabledCam(!enabledCam)
   }
 
+  toggleScreen = async () => {
+    if (!enabledScreen) {
+      await client.createDisplayProducer()
+    }
+    setEnabledScreen(!enabledScreen)
+  }
+
   if (!ready) {
     return null
+  }
+
+  let localVideoStream = null
+  if (client.producers.video) {
+    localVideoStream = new MediaStream()
+    localVideoStream.addTrack(client.producers.video.track)
   }
 
   return (<>
@@ -48,6 +64,13 @@ function RoomCall() {
 
     <input type="checkbox" name="cam" checked={enabledCam} onChange={toggleCam}/>
     <label htmlFor="cam">Cam</label>
+
+    <input type="checkbox" name="screen" checked={enabledScreen} onChange={toggleScreen}/>
+    <label htmlFor="screen">Screen</label>
+
+    {localVideoStream && (
+      <Video src={localVideoStream} autoPlay={true}/>
+    )}
   </>)
 }
 
